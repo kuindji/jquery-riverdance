@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery.riverdance.js</title>
+    <script src="rsc/jquery-1.11.0.min.js"></script>
+    <script src="src/jquery.riverdance.js"></script>
+
+    <style>
+
+        p {
+            font-size: 30px;
+        }
+
+
+        p span {
+            display: inline-block;
+            line-height: inherit;
+            font-size: inherit;
+        }
+
+        .opc {
+            -moz-transition: opacity 0.1s;
+            color: #008200;
+        }
+        .opc-high {
+            opacity: 1;
+        }
+        .opc-low {
+            opacity: .5;
+        }
+
+        .flip {
+            transform-style: preserve-3d;
+            -moz-transition: transform 0.4s;
+        }
+
+        .flip-active {
+            transform: rotateY(90deg);
+        }
+
+        .flip-high {
+            -moz-transition: transform 0s;
+            transform: rotateY(270deg);
+        }
+
+        .flip-leave {
+            -moz-transition: transform 0.4s;
+            transform: rotateY(360deg);
+        }
+
+
+        .jump {
+            -moz-transition: transform 0.2s;
+            position: relative;
+        }
+
+        .jump-active {
+            transform: translateY(-10px);
+        }
+
+        .jump-leave {
+            transform: translateY(0);
+        }
+
+
+        .under {
+            text-decoration: underline;
+        }
+
+    </style>
+
+    <script>
+
+
+        var run = function(){
+            $('p').eq(0).riverdance({
+                cls: "under"
+            });
+        };
+    </script>
+</head>
+<body>
+    <button onclick="run()">Run</button>
+    <p>Pellentesque porta ut quam eget gravida.</p>
+    <p>Pellentesque porta ut quam eget gravida.</p>
+</body>
+</html>
