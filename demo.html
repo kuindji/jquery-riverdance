@@ -172,15 +172,207 @@
             });
         };
     </script>
+
+
+
+    <style id="css-flyin">
+
+        .flyin {
+            opacity: 0;
+            -webkit-transition:  -webkit-transform 0.4s, opacity 0.4s;
+            -moz-transition:  -moz-transform 0.4s, opacity 0.4s;
+            -o-transition:  -o-transform 0.4s, opacity 0.4s;
+            transition:  transform 0.4s, opacity 0.4s;
+
+            -webkit-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            -moz-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            -ms-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            -o-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            transform: rotate(30deg) translateX(-500px) translateY(-200px);
+        }
+
+        .flyin-end {
+            -webkit-transform: rotate(0) translateX(0) translateY(0);
+            -moz-transform: rotate(0) translateX(0) translateY(0);
+            -ms-transform: rotate(0) translateX(0) translateY(0);
+            -o-transform: rotate(0) translateX(0) translateY(0);
+            transform: rotate(0) translateX(0) translateY(0);
+            opacity: 1;
+        }
+    </style>
+    <script id="js-flyin">
+        var flyin = function(){
+            $('#test').riverdance({
+                cls: "flyin",
+                hideBefore: true,
+                stages: ["flyin-end"],
+                text: "Lorem ipsum"
+            });
+        };
+    </script>
+
+
+
+    <style id="css-flyout">
+
+        .flyout {
+            opacity: 1;
+            -webkit-transition:  -webkit-transform 0.4s, opacity 0.4s;
+            -moz-transition:  -moz-transform 0.4s, opacity 0.4s;
+            -o-transition:  -o-transform 0.4s, opacity 0.4s;
+            transition:  transform 0.4s, opacity 0.4s;
+        }
+
+        .flyout-end {
+            -webkit-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            -moz-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            -ms-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            -o-transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            transform: rotate(30deg) translateX(-500px) translateY(-200px);
+            opacity: 0;
+        }
+    </style>
+    <script id="js-flyout">
+        var flyout = function(){
+            $('#test').riverdance({
+                cls: "flyout",
+                hideAfter: true,
+                stages: ["flyout-end"],
+                callback: flyin
+            });
+        };
+    </script>
+
+
+    <style id="css-swing">
+
+        .swing {
+            -webkit-transition:  -webkit-transform 0.4s;
+            -moz-transition:  -moz-transform 0.4s;
+            -o-transition:  -o-transform 0.4s;
+            transition:  transform 0.4s;
+        }
+        .swing-left {
+            -webkit-transform: skew(-15deg) translateX(-30px);
+            -moz-transform: skew(-15deg) translateX(-30px);
+            -ms-transform: skew(-15deg) translateX(-30px);
+            -o-transform: skew(-15deg) translateX(-30px);
+            transform: skew(-15deg) translateX(-30px);
+        }
+        .swing-right {
+            -webkit-transition:  -webkit-transform 0.6s;
+            -moz-transition:  -moz-transform 0.6s;
+            -o-transition:  -o-transform 0.6s;
+            transition:  transform 0.6s;
+            -webkit-transform: skew(15deg) translateX(30px);
+            -moz-transform: skew(15deg) translateX(30px);
+            -ms-transform: skew(15deg) translateX(30px);
+            -o-transform: skew(15deg) translateX(30px);
+            transform: skew(15deg) translateX(30px);
+        }
+        .swing-end {
+            -webkit-transition:  -webkit-transform 0.4s;
+            -moz-transition:  -moz-transform 0.4s;
+            -o-transition:  -o-transform 0.4s;
+            transition:  transform 0.4s;
+            -webkit-transform: skew(0deg) translateX(0);
+            -moz-transform: skew(0deg) translateX(0);
+            -ms-transform: skew(0deg) translateX(0);
+            -o-transform: skew(0deg) translateX(0);
+            transform: skew(0deg) translateX(0);
+        }
+    </style>
+    <script id="js-swing">
+        var swing = function(){
+            $('#test').riverdance({
+                cls: "swing",
+                stages: ["swing-left", "swing-right", "swing-end"]
+            });
+        };
+    </script>
+
+
+    <style id="css-magnify">
+
+        .magnify {
+            -webkit-transition:  -webkit-transform 0.4s;
+            -moz-transition:  -moz-transform 0.4s;
+            -o-transition:  -o-transform 0.4s;
+            transition:  transform 0.4s;
+        }
+        .magnify-start {
+            -webkit-transform: scale(1.4);
+            -moz-transform: scale(1.4);
+            -ms-transform: scale(1.4);
+            -o-transform: scale(1.4);
+            transform: scale(1.4);
+        }
+        .magnify-end {
+            -webkit-transform: scale(1);
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            -o-transform: scale(1);
+            transform: scale(1);
+        }
+    </style>
+    <script id="js-magnify">
+        var magnify = function(){
+            $('#test').riverdance({
+                cls: "magnify",
+                stages: ["magnify-start", "magnify-end"]
+            });
+        };
+    </script>
+
+    <style id="css-grow">
+
+
+        .grow {
+            -webkit-transition:  -webkit-transform 0.4s, opacity 0.4s;
+            -moz-transition:  -moz-transform 0.4s, opacity 0.4s;
+            -o-transition:  -o-transform 0.4s, opacity 0.4s;
+            transition:  transform 0.4s, opacity 0.4s;
+            -webkit-transform: scale(0.1);
+            -moz-transform: scale(0.1);
+            -ms-transform: scale(0.1);
+            -o-transform: scale(0.1);
+            transform: scale(0.1);
+            opacity: 0;
+        }
+        .grow-end {
+            -webkit-transform: scale(1);
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            -o-transform: scale(1);
+            transform: scale(1);
+            opacity: 1
+        }
+    </style>
+    <script id="js-grow">
+        var grow = function(){
+            $('#test').riverdance({
+                cls: "grow",
+                //hideBefore: true,
+                stages: ["grow-end"]
+            });
+        };
+    </script>
 </head>
 <body>
     <h1>jQuery.riverdance.js</h1>
-    <p>jQuery plugin for running css animations on each letter in a text</p>
     <p>
+        jQuery plugin for running css animations on each letter in a text<br>
+        <a href="http://github.com/kuindji/jquery-riverdance">Github</a>
+    </p>
+    <p>
+        <button onclick="flyin(); syntax('flyin');">Fly in</button>
+        <button onclick="flyout(); syntax('flyout');">Fly out</button>
+        <button onclick="swing(); syntax('swing');">Swing</button>
+        <button onclick="magnify(); syntax('magnify');">Magnify</button>
+        <button onclick="grow(); syntax('grow');">Grow</button>
         <button onclick="underline(); syntax('underline');">Underline</button>
         <button onclick="snake(); syntax('snake');">Snake</button>
         <button onclick="flip(); syntax('flip');">Flip</button>
-        <button onclick="opacity(); syntax('opacity');">Opacity</button>
     </p>
 
     <p id="test">Lorem ipsum</p>

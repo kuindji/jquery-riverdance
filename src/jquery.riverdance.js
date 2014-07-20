@@ -38,10 +38,17 @@
     };
 
     var getClass = function(className) {
-        var classes = document.styleSheets[0].rules || document.styleSheets[0].cssRules;
-        for(var x=0;x<classes.length;x++) {
-            if(classes[x].selectorText==className) {
-                return classes[x].cssText || classes[x].style.cssText;
+        var sheets  = document.styleSheets,
+            sheet, classes,
+            i, len;
+
+        for (i = 0, len = sheets.length; i < len; i++) {
+            sheet   = sheets[i];
+            classes = sheet.rules || sheet.cssRules;
+            for(var x=0;x<classes.length;x++) {
+                if(classes[x].selectorText==className) {
+                    return classes[x].cssText || classes[x].style.cssText;
+                }
             }
         }
 
@@ -106,30 +113,39 @@
         this.each(function() {
 
             var node        = this,
-                text        = node.innerText || node.textContent,
+                text        = options.text || node.innerText || node.textContent,
                 position    = 0,
                 length      = text.length,
-                left        = document.createTextNode(""),
-                right       = document.createTextNode(text),
+                left,
+                right,
                 speed       = options.speed || 30,
                 cls         = options.cls,
                 defDuration = (cls ? getMaxDuration(cls) : null) || options.stepDuration || 200,
                 stages      = options.stages ? getStagesDuration(options.stages, defDuration) : null,
                 duration    = stages ? getDurationSum(stages) : defDuration,
-                last        = (new Date).getTime();
+                last,
+                hideBefore  = options.hideBefore || false,
+                hideAfter   = options.hideAfter || false,
+                loop        = options.loop || false,
+                loopDelay   = options.loopDelay || null;
+
 
             var skip        = function(index, startTime, cb) {
                 return function() {
 
                     var letter  = document.createTextNode(text[index]);
                     letter.nodeValue    = text[index];
-                    right.nodeValue     = right.nodeValue.substr(1);
+                    if (!hideBefore) {
+                        right.nodeValue     = right.nodeValue.substr(1);
+                    }
                     node.insertBefore(letter, right);
 
                     sequence([
                         [0, function(){}],
                         [duration, function() {
-                            left.nodeValue += (letter.innerText || letter.textContent);
+                            if (!hideAfter) {
+                                left.nodeValue += (letter.innerText || letter.textContent);
+                            }
                             node.removeChild(letter);
                             if (cb) {
                                 cb();
@@ -147,7 +163,9 @@
                         dur     = 0,
                         i, len,
                         endthis  = function() {
-                            left.nodeValue      += (letter.innerText || letter.textContent);
+                            if (!hideAfter) {
+                                left.nodeValue      += (letter.innerText || letter.textContent);
+                            }
                             node.removeChild(letter);
                             if (cb) {
                                 cb();
@@ -159,7 +177,9 @@
                     letter.style.lineHeight = "inherit";
                     letter.className    = cls;
                     letter.innerHTML    = text[index];
-                    right.nodeValue     = right.nodeValue.substr(1);
+                    if (!hideBefore) {
+                        right.nodeValue     = right.nodeValue.substr(1);
+                    }
                     node.insertBefore(letter, right);
 
                     if (stages) {
@@ -181,7 +201,30 @@
             };
 
             var finish      = function() {
-                node.innerHTML = text;
+
+                if (!hideAfter) {
+                    node.innerHTML = text;
+                }
+                else {
+                    node.innerHTML = "\u200C";
+                }
+
+                if (options.allCls) {
+                    $(node).removeClass(options.allCls);
+                }
+
+                if (options.callback) {
+                    options.callback();
+                }
+
+                if (loop) {
+
+                    window.setTimeout(start, loopDelay || 0);
+
+                    if (loop !== true) {
+                        loop--;
+                    }
+                }
             };
 
             var step        = function() {
@@ -206,15 +249,33 @@
                 }
             };
 
-            while (node.firstChild) {
-                node.removeChild(node.firstChild);
-            }
+            var start = function() {
 
-            node.appendChild(left);
-            node.appendChild(right);
+                if (options.allCls) {
+                    $(node).addClass(options.allCls);
+                }
 
+                while (node.firstChild) {
+                    node.removeChild(node.firstChild);
+                }
 
-            requestAnimationFrame(step);
+                left        = document.createTextNode("");
+                right       = document.createTextNode(text);
+                last        = (new Date).getTime();
+                position    = 0;
+
+                if (!hideAfter) {
+                    node.appendChild(left);
+                }
+                if (hideBefore) {
+                    right.nodeValue = "\u200C"; // non printable
+                }
+                node.appendChild(right);
+
+                requestAnimationFrame(step);
+            };
+
+            start();
         });
 
         return this;

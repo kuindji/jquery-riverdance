@@ -10,8 +10,15 @@ jQuery plugin for running css animations on each letter in a text
 ```js
 $("elem").riverdance({
     cls: "...", //  required initial class
+    allCls: "", // optional class to apply to the element during the process
     stages: [], // optional css stages
     speed: 30, // optional ms per letter speed
-    stepDuration: 200 // optional duration of every step (determined automatically from css)
+    stepDuration: 200, // optional duration of every step (determined automatically from css)
+    hideBefore: false, // optional flag to hide letters until animated
+    hideAfter: false, // optional flag to hide letters after animated
+    callback: null, // optional callback function to call after all animations
+    text: "", // optional replacement text
+    loop: false|number, // repeat process indefinitely (true) or number of times
+    loopDelay: 0 // number of ms
 });
 ```
