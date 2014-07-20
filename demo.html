@@ -2,36 +2,84 @@
 <html>
 <head>
     <title>jQuery.riverdance.js</title>
+    <link rel="stylesheet" href="rsc/prism.css">
     <script src="rsc/jquery-1.11.0.min.js"></script>
     <script src="src/jquery.riverdance.js"></script>
+    <script src="rsc/prism.js" data-manual></script>
 
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            padding-top: 50px;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: Georgia;
+        }
 
         p {
-            font-size: 30px;
+            text-align: center;
         }
 
-
-        p span {
-            display: inline-block;
-            line-height: inherit;
-            font-size: inherit;
+        pre {
+            text-align: left;
         }
 
-        .opc {
-            -moz-transition: opacity 0.1s;
-            color: #008200;
+        #test {
+            font-size: 50px;
+            text-align: center;
+            font-family: Helvetica, Arial, sans-serif;
         }
-        .opc-high {
+    </style>
+
+    <script>
+        var syntax = function(id) {
+
+            var css = $("#css-"+id);
+            $('code.language-css').html(css.text());
+
+            var js  = $("#js-"+id);
+            $('code.language-javascript').html(js.text());
+
+            Prism.highlightAll();
+
+        };
+    </script>
+
+    <style id="css-opacity">
+        .opacity {
+            -webkit-transition: opacity 0.2s;
+            -moz-transition: opacity 0.2s;
+            -o-transition: opacity 0.2s;
+            transition: opacity 0.2s;
+        }
+        .opacity-high {
             opacity: 1;
         }
-        .opc-low {
+        .opacity-low {
             opacity: .5;
         }
 
+    </style>
+    <script id="js-opacity">
+        var opacity = function(){
+            $('#test').riverdance({
+                cls: "opacity",
+                stages: ["opacity-high","opacity-low", "opacity-high"]
+            });
+        };
+    </script>
+
+    <style id="css-flip">
         .flip {
             transform-style: preserve-3d;
-            -moz-transition: transform 0.4s;
+            -webkit-transition:  transform 0.4s;
+            -moz-transition:  transform 0.4s;
+            -o-transition:  transform 0.4s;
+            transition:  transform 0.4s;
         }
 
         .flip-active {
@@ -39,49 +87,85 @@
         }
 
         .flip-high {
-            -moz-transition: transform 0s;
+            -webkit-transition:  transform 0s;
+            -moz-transition:  transform 0s;
+            -o-transition:  transform 0s;
+            transition:  transform 0s;
             transform: rotateY(270deg);
         }
 
         .flip-leave {
-            -moz-transition: transform 0.4s;
+            -webkit-transition:  transform 0.4s;
+            -moz-transition:  transform 0.4s;
+            -o-transition:  transform 0.4s;
+            transition:  transform 0.4s;
             transform: rotateY(360deg);
         }
+    </style>
+    <script id="js-flip">
+        var flip = function(){
+            $('#test').riverdance({
+                cls: "flip",
+                stages: ["flip-active","flip-high", "flip-leave"]
+            });
+        };
+    </script>
 
 
-        .jump {
-            -moz-transition: transform 0.2s;
-            position: relative;
-        }
-
-        .jump-active {
-            transform: translateY(-10px);
-        }
-
-        .jump-leave {
-            transform: translateY(0);
-        }
-
-
+    <style id="css-underline">
         .under {
             text-decoration: underline;
         }
-
     </style>
 
-    <script>
-
-
-        var run = function(){
-            $('p').eq(0).riverdance({
+    <script id="js-underline">
+        var underline = function(){
+            $('#test').riverdance({
                 cls: "under"
+            });
+        };
+    </script>
+
+    <style id="css-snake">
+        .snake {
+            -webkit-transition:  transform 0.2s;
+            -moz-transition:  transform 0.2s;
+            -o-transition:  transform 0.2s;
+            transition:  transform 0.2s;
+            position: relative;
+        }
+
+        .snake-active {
+            transform: translateY(-10px);
+        }
+
+        .snake-leave {
+            transform: translateY(0);
+        }
+
+    </style>
+    <script id="js-snake">
+        var snake = function(){
+            $('#test').riverdance({
+                cls: "snake",
+                stages: ["snake-active","snake-leave"]
             });
         };
     </script>
 </head>
 <body>
-    <button onclick="run()">Run</button>
-    <p>Pellentesque porta ut quam eget gravida.</p>
-    <p>Pellentesque porta ut quam eget gravida.</p>
+    <h1>jQuery.riverdance.js</h1>
+    <p>jQuery plugin for running css animations on each letter in a text</p>
+    <p>
+        <button onclick="underline(); syntax('underline');">Underline</button>
+        <button onclick="snake(); syntax('snake');">Snake</button>
+        <button onclick="flip(); syntax('flip');">Flip</button>
+        <button onclick="opacity(); syntax('opacity');">Opacity</button>
+    </p>
+
+    <p id="test">Lorem ipsum</p>
+
+    <pre><code class="language-css"></code></pre>
+    <pre><code class="language-javascript"></code></pre>
 </body>
 </html>
