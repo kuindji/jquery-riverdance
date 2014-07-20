@@ -76,29 +76,41 @@
     <style id="css-flip">
         .flip {
             transform-style: preserve-3d;
-            -webkit-transition:  transform 0.4s;
-            -moz-transition:  transform 0.4s;
-            -o-transition:  transform 0.4s;
+            -webkit-transition:  -webkit-transform 0.4s;
+            -moz-transition:  -moz-transform 0.4s;
+            -o-transition:  -o-transform 0.4s;
             transition:  transform 0.4s;
         }
 
         .flip-active {
+            -webkit-transform: rotateY(90deg);
+            -moz-transform: rotateY(90deg);
+            -ms-transform: rotateY(90deg);
+            -o-transform: rotateY(90deg);
             transform: rotateY(90deg);
         }
 
         .flip-high {
-            -webkit-transition:  transform 0s;
-            -moz-transition:  transform 0s;
-            -o-transition:  transform 0s;
+            -webkit-transition:  -webkit-transform 0s;
+            -moz-transition:  -moz-transform 0s;
+            -o-transition:  -o-transform 0s;
             transition:  transform 0s;
+            -webkit-transform: rotateY(270deg);
+            -moz-transform: rotateY(270deg);
+            -ms-transform: rotateY(270deg);
+            -o-transform: rotateY(270deg);
             transform: rotateY(270deg);
         }
 
         .flip-leave {
-            -webkit-transition:  transform 0.4s;
-            -moz-transition:  transform 0.4s;
-            -o-transition:  transform 0.4s;
+            -webkit-transition:  -webkit-transform 0.4s;
+            -moz-transition:  -moz-transform 0.4s;
+            -o-transition:  -o-transform 0.4s;
             transition:  transform 0.4s;
+            -webkit-transform: rotateY(360deg);
+            -moz-transform: rotateY(360deg);
+            -ms-transform: rotateY(360deg);
+            -o-transform: rotateY(360deg);
             transform: rotateY(360deg);
         }
     </style>
@@ -128,18 +140,26 @@
 
     <style id="css-snake">
         .snake {
-            -webkit-transition:  transform 0.2s;
-            -moz-transition:  transform 0.2s;
-            -o-transition:  transform 0.2s;
+            -webkit-transition:  -webkit-transform 0.2s;
+            -moz-transition:  -moz-transform 0.2s;
+            -o-transition:  -o-transform 0.2s;
             transition:  transform 0.2s;
             position: relative;
         }
 
         .snake-active {
+            -webkit-transform: translateY(-10px);
+            -moz-transform: translateY(-10px);
+            -ms-transform: translateY(-10px);
+            -o-transform: translateY(-10px);
             transform: translateY(-10px);
         }
 
         .snake-leave {
+            -webkit-transform: translateY(0);
+            -moz-transform: translateY(0);
+            -ms-transform: translateY(0);
+            -o-transform: translateY(0);
             transform: translateY(0);
         }
 
