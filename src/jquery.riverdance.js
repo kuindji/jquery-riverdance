@@ -2,6 +2,8 @@
 
 (function($){
 
+    var uid = 1;
+
     var trim =(function() {
         // native trim is way faster: http://jsperf.com/angular-trim-test
         // but IE doesn't have it... :-(
@@ -15,22 +17,25 @@
         };
     })();
 
-    var sequence   = function(frames, startTime) {
+    var sequence   = function(frames, startTime, validFn) {
 
         var position    = 0,
             length      = frames.length,
             step        = function() {
-                var time    = (new Date).getTime(),
-                    frame   = frames[position];
 
-                if (time - startTime >= frame[0]) {
-                    frame[1](time, position);
-                    startTime = time;
-                    position++;
-                }
+                if (validFn()) {
+                    var time    = (new Date).getTime(),
+                        frame   = frames[position];
 
-                if (position < length) {
-                    requestAnimationFrame(step);
+                    if (time - startTime >= frame[0]) {
+                        frame[1](time, position);
+                        startTime = time;
+                        position++;
+                    }
+
+                    if (position < length) {
+                        requestAnimationFrame(step);
+                    }
                 }
             };
 
@@ -106,81 +111,104 @@
         return sum;
     };
 
+    var EMPTY = "\u200C";
+
     $.fn.riverdance = function(options) {
 
-        options = options || {};
+        var stop        = options == "stop";
+
+        options = stop ? {} : options || {};
+
+        var speed       = options.speed || 30,
+            cls         = options.cls,
+            hideBefore  = options.hideBefore || false,
+            hideAfter   = options.hideAfter || false,
+            loop        = options.loop || false,
+            loopDelay   = options.loopDelay || null,
+            defDuration = (cls ? getMaxDuration(cls) : null) || options.stepDuration || 200,
+            stages      = options.stages ? getStagesDuration(options.stages, defDuration) : null,
+            duration    = stages ? getDurationSum(stages) : defDuration;
 
         this.each(function() {
 
             var node        = this,
+                el          = $(node),
                 text        = options.text || node.innerText || node.textContent,
                 position    = 0,
                 length      = text.length,
+                reverse     = options.reverse || false,
+                id          = uid++,
                 left,
                 right,
-                speed       = options.speed || 30,
-                cls         = options.cls,
-                defDuration = (cls ? getMaxDuration(cls) : null) || options.stepDuration || 200,
-                stages      = options.stages ? getStagesDuration(options.stages, defDuration) : null,
-                duration    = stages ? getDurationSum(stages) : defDuration,
-                last,
-                hideBefore  = options.hideBefore || false,
-                hideAfter   = options.hideAfter || false,
-                loop        = options.loop || false,
-                loopDelay   = options.loopDelay || null;
+                last;
+
+            var stillValid      = function() {
+                return el.data("riverdance") === id;
+            };
+
+            var createLetter    = function(inx) {
+
+                var letter, char = text[inx];
+
+                if (!trim(char)) {
+                    char = "&nbsp;";
+                }
+                letter  = document.createElement("span");
+                letter.innerHTML = char;
+                letter.style.display    = "inline-block";
+                letter.style.fontSize   = "inherit";
+                letter.style.lineHeight = "inherit";
+                letter.className = cls;
 
 
-            var skip        = function(index, startTime, cb) {
-                return function() {
-
-                    var letter  = document.createTextNode(text[index]);
-                    letter.nodeValue    = text[index];
-                    if (!hideBefore) {
-                        right.nodeValue     = right.nodeValue.substr(1);
+                if (!hideBefore) {
+                    if (!reverse) {
+                        right.nodeValue = right.nodeValue.substr(1);
                     }
-                    node.insertBefore(letter, right);
+                    else {
+                        left.nodeValue = text.substring(0, inx);
+                    }
+                }
 
-                    sequence([
-                        [0, function(){}],
-                        [duration, function() {
-                            if (!hideAfter) {
-                                left.nodeValue += (letter.innerText || letter.textContent);
-                            }
-                            node.removeChild(letter);
-                            if (cb) {
-                                cb();
-                            }
-                        }]
-                    ], startTime);
-                };
+                if (!reverse) {
+                    node.insertBefore(letter, right);
+                }
+                else {
+                    node.insertBefore(letter, left.nextSibling);
+                }
+
+                return letter;
+            };
+
+            var removeLetter    = function(letter, inx) {
+
+                if (letter && letter.parentNode === node) {
+                    node.removeChild(letter);
+                }
+
+                if (!hideAfter) {
+                    if (!reverse) {
+                        left.nodeValue += text[inx];
+                    }
+                    else {
+                        right.nodeValue = text.substr(inx);
+                    }
+                }
             };
 
             var process     = function(index, startTime, cb) {
                 return function() {
 
-                    var letter  = document.createElement("span"),
+                    var letter  = createLetter(index),
                         steps   = [],
                         dur     = 0,
                         i, len,
                         endthis  = function() {
-                            if (!hideAfter) {
-                                left.nodeValue      += (letter.innerText || letter.textContent);
-                            }
-                            node.removeChild(letter);
+                            removeLetter(letter, index);
                             if (cb) {
                                 cb();
                             }
                         };
-
-                    letter.style.display    = "inline-block";
-                    letter.style.fontSize   = "inherit";
-                    letter.style.lineHeight = "inherit";
-                    letter.className    = cls;
-                    letter.innerHTML    = text[index];
-                    if (!hideBefore) {
-                        right.nodeValue     = right.nodeValue.substr(1);
-                    }
-                    node.insertBefore(letter, right);
 
                     if (stages) {
                         for (i = 0, len = stages.length; i < len; i++) {
@@ -192,90 +220,130 @@
                             dur = stages[i][0];
                         }
                         steps.push([dur, endthis]);
-                        sequence(steps, startTime);
+                        sequence(steps, startTime, stillValid);
                     }
                     else {
-                        sequence([[duration, endthis]], startTime);
+                        sequence([[duration, endthis]], startTime, stillValid);
                     }
                 };
             };
 
             var finish      = function() {
 
-                if (!hideAfter) {
-                    node.innerHTML = text;
+                if (stillValid()) {
+
+                    if (!hideAfter) {
+                        node.innerHTML = text;
+                    }
+                    else {
+                        node.innerHTML = "\u200C";
+                    }
+
+                    if (options.allCls) {
+                        el.removeClass(options.allCls);
+                    }
+
+                    if (options.callback) {
+                        options.callback();
+                    }
+
+                    if (loop) {
+
+                        if (options.loopReverse) {
+                            reverse = !reverse;
+                        }
+
+                        window.setTimeout(start, loopDelay || 0);
+
+                        if (loop !== true) {
+                            loop--;
+                        }
+                    }
                 }
                 else {
-                    node.innerHTML = "\u200C";
+                    abort();
+                }
+            };
+
+            var abort       = function() {
+
+                if (!el.data("riverdance")) {
+                    if (!hideAfter) {
+                        node.innerHTML = text;
+                    }
+                    else {
+                        node.innerHTML = "\u200C";
+                    }
+
+                    if (options.callback) {
+                        options.callback();
+                    }
                 }
 
                 if (options.allCls) {
-                    $(node).removeClass(options.allCls);
-                }
-
-                if (options.callback) {
-                    options.callback();
-                }
-
-                if (loop) {
-
-                    window.setTimeout(start, loopDelay || 0);
-
-                    if (loop !== true) {
-                        loop--;
-                    }
+                    el.removeClass(options.allCls);
                 }
             };
 
             var step        = function() {
 
-                var time    = (new Date).getTime();
+                if (stillValid()) {
 
-                if (time - last >= speed) {
+                    var time            = (new Date).getTime(),
+                        lastPosition    = reverse ? (position == 0) : (position == length - 1),
+                        afterLast       = reverse ? (position < 0) : (position >= length);
 
-                    if (trim(text[position])) {
-                        process(position, time, position == length - 1 ? finish : null)();
+                    if (time - last >= speed) {
+                        process(position, time, lastPosition ? finish : null)();
+                        position += (reverse ? -1 : 1);
+                        last = time;
                     }
-                    else {
-                        skip(position, time, position == length - 1 ? finish : null)();
-                    }
 
-                    position++;
-                    last = time;
+                    if (!afterLast) {
+                        requestAnimationFrame(step);
+                    }
                 }
-
-                if (position < length) {
-                    requestAnimationFrame(step);
+                else {
+                    abort();
                 }
             };
 
             var start = function() {
 
                 if (options.allCls) {
-                    $(node).addClass(options.allCls);
+                    el.addClass(options.allCls);
                 }
 
                 while (node.firstChild) {
                     node.removeChild(node.firstChild);
                 }
 
-                left        = document.createTextNode("");
-                right       = document.createTextNode(text);
+                left        = document.createTextNode(reverse ? text : "");
+                right       = document.createTextNode(reverse ? "" : text);
                 last        = (new Date).getTime();
-                position    = 0;
+                position    = reverse ? text.length - 1 : 0;
 
-                if (!hideAfter) {
-                    node.appendChild(left);
-                }
                 if (hideBefore) {
-                    right.nodeValue = "\u200C"; // non printable
+                    if (reverse) {
+                        left.nodeValue = EMPTY;
+                    }
+                    else {
+                        right.nodeValue = EMPTY;
+                    }
                 }
+                node.appendChild(left);
                 node.appendChild(right);
 
                 requestAnimationFrame(step);
             };
 
-            start();
+            if (stop) {
+                el.data("riverdance", null);
+            }
+            else {
+                el.data("riverdance", id);
+                start();
+            }
         });
 
         return this;

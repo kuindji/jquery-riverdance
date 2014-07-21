@@ -49,29 +49,6 @@
         };
     </script>
 
-    <style id="css-opacity">
-        .opacity {
-            -webkit-transition: opacity 0.2s;
-            -moz-transition: opacity 0.2s;
-            -o-transition: opacity 0.2s;
-            transition: opacity 0.2s;
-        }
-        .opacity-high {
-            opacity: 1;
-        }
-        .opacity-low {
-            opacity: .5;
-        }
-
-    </style>
-    <script id="js-opacity">
-        var opacity = function(){
-            $('#test').riverdance({
-                cls: "opacity",
-                stages: ["opacity-high","opacity-low", "opacity-high"]
-            });
-        };
-    </script>
 
     <style id="css-flip">
         .flip {
@@ -116,9 +93,12 @@
     </style>
     <script id="js-flip">
         var flip = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "flip",
-                stages: ["flip-active","flip-high", "flip-leave"]
+                stages: ["flip-active","flip-high", "flip-leave"],
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -132,8 +112,11 @@
 
     <script id="js-underline">
         var underline = function(){
-            $('#test').riverdance({
-                cls: "under"
+            $('#test').riverdance("stop").riverdance({
+                cls: "under",
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -166,9 +149,12 @@
     </style>
     <script id="js-snake">
         var snake = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "snake",
-                stages: ["snake-active","snake-leave"]
+                stages: ["snake-active","snake-leave"],
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -202,11 +188,14 @@
     </style>
     <script id="js-flyin">
         var flyin = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "flyin",
                 hideBefore: true,
                 stages: ["flyin-end"],
-                text: "Lorem ipsum"
+                text: "Lorem ipsum",
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -234,11 +223,14 @@
     </style>
     <script id="js-flyout">
         var flyout = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "flyout",
                 hideAfter: true,
                 stages: ["flyout-end"],
-                callback: flyin
+                callback: flyin,
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -284,9 +276,12 @@
     </style>
     <script id="js-swing">
         var swing = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "swing",
-                stages: ["swing-left", "swing-right", "swing-end"]
+                stages: ["swing-left", "swing-right", "swing-end"],
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -317,9 +312,12 @@
     </style>
     <script id="js-magnify">
         var magnify = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "magnify",
-                stages: ["magnify-start", "magnify-end"]
+                stages: ["magnify-start", "magnify-end"],
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
@@ -350,13 +348,17 @@
     </style>
     <script id="js-grow">
         var grow = function(){
-            $('#test').riverdance({
+            $('#test').riverdance("stop").riverdance({
                 cls: "grow",
-                //hideBefore: true,
-                stages: ["grow-end"]
+                stages: ["grow-end"],
+                reverse: document.getElementById("reversed").checked,
+                loop: document.getElementById("looped").checked,
+                loopReverse: document.getElementById("reversed-loop").checked
             });
         };
     </script>
+
+
 </head>
 <body>
     <h1>jQuery.riverdance.js</h1>
@@ -373,6 +375,10 @@
         <button onclick="underline(); syntax('underline');">Underline</button>
         <button onclick="snake(); syntax('snake');">Snake</button>
         <button onclick="flip(); syntax('flip');">Flip</button>
+        <br>
+        <label><input type="checkbox" id="reversed"> Reversed</label>
+        <label><input type="checkbox" id="looped"> Loop</label>
+        <label><input type="checkbox" id="reversed-loop"> Reversed loop</label>
     </p>
 
     <p id="test">Lorem ipsum</p>

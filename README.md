@@ -13,12 +13,14 @@ $("elem").riverdance({
     allCls: "", // optional class to apply to the element during the process
     stages: [], // optional css stages
     speed: 30, // optional ms per letter speed
+    reverse: false, // optional; true to start from the right
     stepDuration: 200, // optional duration of every step (determined automatically from css)
     hideBefore: false, // optional flag to hide letters until animated
     hideAfter: false, // optional flag to hide letters after animated
     callback: null, // optional callback function to call after all animations
     text: "", // optional replacement text
     loop: false|number, // repeat process indefinitely (true) or number of times
-    loopDelay: 0 // number of ms
+    loopDelay: 0, // number of ms
+    loopReverse: false // reverse on each iteration
 });
 ```
