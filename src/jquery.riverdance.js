@@ -148,13 +148,13 @@
 
             var createLetter    = function(inx) {
 
-                var letter, char = text[inx];
+                var letter, chr = text[inx];
 
-                if (!trim(char)) {
-                    char = "&nbsp;";
+                if (!trim(chr)) {
+                    chr = "&nbsp;";
                 }
                 letter  = document.createElement("span");
-                letter.innerHTML = char;
+                letter.innerHTML = chr;
                 letter.style.display    = "inline-block";
                 letter.style.fontSize   = "inherit";
                 letter.style.lineHeight = "inherit";

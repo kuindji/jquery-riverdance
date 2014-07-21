@@ -3,7 +3,7 @@ jQuery plugin for running css animations on each letter in a text
 
 [Examples](http://kuindji.com/js/jquery-riverdance/demo.html)
 
-2k minified
+3k minified
 
 ##Options
 
@@ -23,4 +23,6 @@ $("elem").riverdance({
     loopDelay: 0, // number of ms
     loopReverse: false // reverse on each iteration
 });
+
+$("elem").riverdance("stop");
 ```
